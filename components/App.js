@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 import NewTodo from "./NewTodo";
-import Row from "./Row";
+import Todo from "./Todo";
 import * as firebase from "firebase";
 import firebaseConfig from "../credentials.json";
 
@@ -18,30 +18,57 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 class App extends Component {
   state = {
     inputValue: "",
-    items: [{ id: 1, text: "foo bar", isCompleted: false }]
+    sections: [
+      {
+        title: "Personal",
+        data: [{ id: 1, text: "foo bar", isCompleted: false }],
+        key: "Personal"
+      },
+      {
+        title: "Movies to Watch",
+        data: [{ id: 2, text: "Lost Highway", isCompleted: true }],
+        key: "Movies to Watch"
+      }
+    ]
   };
 
-  handleAddItem = () => {
+  handleAddItem = ({ list }) => {
     if (!this.state.inputValue) return null;
 
-    const newItems = [
-      ...this.state.items,
-      {
-        id: Date.now(),
-        text: this.state.inputValue,
-        isCompleted: false
-      }
-    ];
+    const newSections = this.state.sections.map(section => {
+      if (section.title !== list) return section;
 
-    this.setState({
-      items: newItems,
+      const newData = [
+        ...section.data,
+        {
+          id: Date.now(),
+          text: this.state.inputValue,
+          isCompleted: false
+        }
+      ];
+
+      return { ...section, data: newData };
+    });
+
+    const newState = Object.assign({}, this.state, {
+      sections: newSections,
       inputValue: ""
     });
+
+    this.setState(newState);
   };
 
-  handleRemoveItem = id => {
-    const newItems = this.state.items.filter(item => item.id !== id);
-    this.setState({ items: newItems });
+  handleRemoveItem = ({ list, id }) => {
+    const newSections = this.state.sections.map(section => {
+      if (section.title !== list) return section;
+
+      const newData = section.data.filter(item => item.id !== id);
+      return { ...section, data: newData };
+    });
+
+    const newState = Object.assign({}, this.state, { sections: newSections });
+
+    this.setState(newState);
   };
 
   handleInputChange = inputValue => {
@@ -62,7 +89,7 @@ class App extends Component {
   };
 
   renderItem = ({ item }) => (
-    <Row
+    <Todo
       key={item.id}
       {...item}
       onToggle={this.handleCheckBoxToggle}
@@ -77,14 +104,6 @@ class App extends Component {
   );
 
   render() {
-    const sections = [
-      {
-        title: "Personal",
-        data: this.state.items,
-        key: "Personal"
-      }
-    ];
-
     return (
       <View style={styles.container}>
         <NewTodo
@@ -94,7 +113,7 @@ class App extends Component {
         />
         <SectionList
           style={styles.list}
-          sections={sections}
+          sections={this.state.sections}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
           renderSectionHeader={this.renderSectionHeader}

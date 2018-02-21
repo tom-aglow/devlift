@@ -1,5 +1,5 @@
 import App from "../App";
-import Row from "../Row";
+import Row from "../Todo";
 import { TestHelper, setupGlobalObject } from "../../utils/testUtils";
 
 const defaultProps = {};

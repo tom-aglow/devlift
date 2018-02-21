@@ -3,14 +3,18 @@ import PropTypes from "prop-types";
 import { StyleSheet, View, TextInput } from "react-native";
 
 class NewTodo extends Component {
+  handleSubmit = () => {
+    this.props.onAddItem({ list: "Personal" });
+  };
+
   render() {
-    const { inputValue, onChange, onAddItem } = this.props;
+    const { inputValue, onChange } = this.props;
     return (
       <View style={styles.header}>
         <TextInput
           value={inputValue}
           onChangeText={onChange}
-          onSubmitEditing={onAddItem}
+          onSubmitEditing={this.handleSubmit}
           placeholder="I want to..."
           blurOnSubmit={false}
           returnKeyType="done"

@@ -12,7 +12,7 @@ class Row extends Component {
 
   handleDeleteClick = () => {
     const { id, onDelete } = this.props;
-    onDelete(id);
+    onDelete({list: 'Personal', id});
   };
 
   render() {
