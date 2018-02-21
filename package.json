@@ -41,6 +41,6 @@
     "snapshotSerializers": ["./node_modules/enzyme-to-json/serializer"]
   },
   "lint-staged": {
-    "*.{js,json,css,md}": ["prettier --write", "git add"]
+    "*.{js,json,css,md}": ["prettier --write --single-quote", "git add"]
   }
 }
