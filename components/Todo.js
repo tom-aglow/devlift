@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import CheckBox from "react-native-check-box";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import CheckBox from 'react-native-check-box';
 
 class Row extends Component {
   handleToggleClick = () => {
@@ -12,7 +12,7 @@ class Row extends Component {
 
   handleDeleteClick = () => {
     const { id, onDelete } = this.props;
-    onDelete({list: 'Personal', id});
+    onDelete({ list: 'Personal', id });
   };
 
   render() {
@@ -23,10 +23,10 @@ class Row extends Component {
           isChecked={isCompleted}
           onClick={this.handleToggleClick}
           checkedImage={
-            <Image source={require("../img/checkbox_checked.png")} />
+            <Image source={require('../img/checkbox_checked.png')} />
           }
           unCheckedImage={
-            <Image source={require("../img/checkbox_unchecked.png")} />
+            <Image source={require('../img/checkbox_unchecked.png')} />
           }
         />
         <View style={styles.textWrapper}>
@@ -34,9 +34,11 @@ class Row extends Component {
             {text}
           </Text>
         </View>
-        <TouchableOpacity onPress={this.handleDeleteClick}>
-          <Image source={require("../img/button_delete.png")} />
-        </TouchableOpacity>
+        {isCompleted && (
+          <TouchableOpacity onPress={this.handleDeleteClick}>
+            <Image source={require('../img/button_delete.png')} />
+          </TouchableOpacity>
+        )}
       </View>
     );
   }
@@ -45,19 +47,20 @@ class Row extends Component {
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between"
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   textWrapper: {
     flex: 1,
     marginLeft: 15
   },
   text: {
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: 'OpenSans-Light'
   },
   isCompleted: {
-    textDecorationLine: "line-through"
+    textDecorationLine: 'line-through'
   }
 });
 

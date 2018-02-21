@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,28 +6,29 @@ import {
   SectionList,
   Keyboard,
   Platform
-} from "react-native";
+} from 'react-native';
+import * as firebase from 'firebase';
 
-import NewTodo from "./NewTodo";
-import Todo from "./Todo";
-import * as firebase from "firebase";
-import firebaseConfig from "../credentials.json";
+import NewTodo from './NewTodo';
+import Todo from './Todo';
+import colors from '../utils/colors.json';
+import firebaseConfig from '../credentials.json';
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 class App extends Component {
   state = {
-    inputValue: "",
+    inputValue: '',
     sections: [
       {
-        title: "Personal",
-        data: [{ id: 1, text: "foo bar", isCompleted: false }],
-        key: "Personal"
+        title: 'Personal',
+        data: [{ id: 1, text: 'foo bar', isCompleted: false }],
+        key: 'Personal'
       },
       {
-        title: "Movies to Watch",
-        data: [{ id: 2, text: "Lost Highway", isCompleted: true }],
-        key: "Movies to Watch"
+        title: 'Movies to Watch',
+        data: [{ id: 2, text: 'Lost Highway', isCompleted: true }],
+        key: 'Movies to Watch'
       }
     ]
   };
@@ -52,7 +53,7 @@ class App extends Component {
 
     const newState = Object.assign({}, this.state, {
       sections: newSections,
-      inputValue: ""
+      inputValue: ''
     });
 
     this.setState(newState);
@@ -128,25 +129,26 @@ class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    backgroundColor: "#F5FCFF",
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: colors.white,
     ...Platform.select({
       ios: { paddingTop: 30 }
     })
   },
   sectionHeader: {
     fontSize: 20,
-    fontWeight: "700"
+    fontFamily: 'OpenSans-Bold',
+    marginTop: 20
   },
   list: {
-    backgroundColor: "#b0beff",
-    paddingHorizontal: 10,
-    width: "100%"
+    backgroundColor: colors.white,
+    paddingHorizontal: 20,
+    width: '100%'
   },
   separator: {
     borderWidth: 1,
-    borderColor: "#F5FCFF"
+    borderColor: '#F5FCFF'
   }
 });
 
