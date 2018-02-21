@@ -6,6 +6,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "lint": "eslint . --ext .js,.jsx --quiet",
     "test": "jest",
+    "test:watch": "jest --watch",
     "precommit": "lint-staged"
   },
   "dependencies": {
@@ -26,10 +27,12 @@
     "husky": "^0.14.3",
     "jest": "22.4.0",
     "jest-serializer-enzyme": "^1.0.0",
+    "jsdom": "^11.6.2",
     "lint-staged": "^6.1.1",
     "prettier": "1.10.2",
     "react-addons-test-utils": "^15.6.2",
     "react-dom": "^16.2.0",
+    "react-native-mock": "^0.3.1",
     "react-test-renderer": "16.2.0"
   },
   "jest": {

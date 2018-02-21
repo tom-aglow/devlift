@@ -18,7 +18,7 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 class App extends Component {
   state = {
     inputValue: "",
-    items: [{ id: Date.now(), text: "foo bar", isCompleted: false }]
+    items: [{ id: 1, text: "foo bar", isCompleted: false }]
   };
 
   handleAddItem = () => {

@@ -7,23 +7,54 @@ exports[`renders correctly 1`] = `
       "alignItems": "center",
       "backgroundColor": "#F5FCFF",
       "flex": 1,
-      "justifyContent": "center",
+      "justifyContent": "flex-end",
+      "paddingTop": 30,
     }
   }
 >
-  <Text
-    accessible={true}
-    allowFontScaling={true}
-    ellipsizeMode="tail"
+  <NewTodo
+    inputValue=""
+    onAddItem={[Function]}
+    onChange={[Function]}
+  />
+  <SectionList
+    data={Array []}
+    disableVirtualization={false}
+    enableEmptySections={true}
+    horizontal={false}
+    initialNumToRender={10}
+    keyExtractor={[Function]}
+    maxToRenderPerBatch={10}
+    onEndReachedThreshold={2}
+    onScroll={[Function]}
+    renderItem={[Function]}
+    renderSectionHeader={[Function]}
+    scrollEventThrottle={50}
+    sections={
+      Array [
+        Object {
+          "data": Array [
+            Object {
+              "id": 1,
+              "isCompleted": false,
+              "text": "foo bar",
+            },
+          ],
+          "key": "Personal",
+          "title": "Personal",
+        },
+      ]
+    }
+    stickySectionHeadersEnabled={true}
     style={
       Object {
-        "color": "#333333",
-        "marginBottom": 5,
-        "textAlign": "center",
+        "backgroundColor": "#b0beff",
+        "paddingHorizontal": 10,
+        "width": "100%",
       }
     }
-  >
-    Hello world
-  </Text>
+    updateCellsBatchingPeriod={50}
+    windowSize={21}
+  />
 </View>
 `;
