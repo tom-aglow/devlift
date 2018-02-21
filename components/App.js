@@ -18,7 +18,7 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 class App extends Component {
   state = {
     inputValue: "",
-    items: [{ id: Date.now(), text: "foo bar", completed: false }]
+    items: [{ id: Date.now(), text: "foo bar", isCompleted: false }]
   };
 
   handleAddItem = () => {
@@ -29,7 +29,7 @@ class App extends Component {
       {
         id: Date.now(),
         text: this.state.inputValue,
-        completed: false
+        isCompleted: false
       }
     ];
 
@@ -47,7 +47,18 @@ class App extends Component {
     Keyboard.dismiss();
   };
 
-  renderItem = ({ item }) => <Row key={item.id} {...item} />;
+  handleCheckBoxToggle = (id, isCompleted) => {
+    const newItems = this.state.items.map(item => {
+      if (item.id !== id) return item;
+      return { ...item, isCompleted };
+    });
+
+    this.setState({ items: newItems });
+  };
+
+  renderItem = ({ item }) => (
+    <Row key={item.id} {...item} onToggle={this.handleCheckBoxToggle} />
+  );
 
   keyExtractor = ({ id }) => id;
 
