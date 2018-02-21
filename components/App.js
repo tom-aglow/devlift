@@ -39,6 +39,11 @@ class App extends Component {
     });
   };
 
+  handleRemoveItem = id => {
+    const newItems = this.state.items.filter(item => item.id !== id);
+    this.setState({ items: newItems });
+  };
+
   handleInputChange = inputValue => {
     this.setState({ inputValue });
   };
@@ -57,7 +62,12 @@ class App extends Component {
   };
 
   renderItem = ({ item }) => (
-    <Row key={item.id} {...item} onToggle={this.handleCheckBoxToggle} />
+    <Row
+      key={item.id}
+      {...item}
+      onToggle={this.handleCheckBoxToggle}
+      onDelete={this.handleRemoveItem}
+    />
   );
 
   keyExtractor = ({ id }) => id;

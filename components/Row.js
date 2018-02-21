@@ -1,13 +1,18 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import CheckBox from "react-native-check-box";
 
 class Row extends Component {
-  handleOnClick = () => {
+  handleToggleClick = () => {
     const { id, onToggle, isCompleted } = this.props;
     const newIsCompleted = !isCompleted;
     onToggle(id, newIsCompleted);
+  };
+
+  handleDeleteClick = () => {
+    const { id, onDelete } = this.props;
+    onDelete(id);
   };
 
   render() {
@@ -16,7 +21,7 @@ class Row extends Component {
       <View style={styles.container}>
         <CheckBox
           isChecked={isCompleted}
-          onClick={this.handleOnClick}
+          onClick={this.handleToggleClick}
           checkedImage={
             <Image source={require("../img/checkbox_checked.png")} />
           }
@@ -29,6 +34,9 @@ class Row extends Component {
             {text}
           </Text>
         </View>
+        <TouchableOpacity onPress={this.handleDeleteClick}>
+          <Image source={require("../img/button_delete.png")} />
+        </TouchableOpacity>
       </View>
     );
   }
@@ -57,7 +65,8 @@ Row.propTypes = {
   id: PropTypes.number.isRequired,
   text: PropTypes.string.isRequired,
   isCompleted: PropTypes.bool.isRequired,
-  onToggle: PropTypes.func.isRequired
+  onToggle: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired
 };
 
 export default Row;
