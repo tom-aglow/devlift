@@ -5,14 +5,14 @@ import CheckBox from 'react-native-check-box';
 
 class Row extends Component {
   handleToggleClick = () => {
-    const { id, onToggle, isCompleted } = this.props;
+    const { list, id, onToggle, isCompleted } = this.props;
     const newIsCompleted = !isCompleted;
-    onToggle(id, newIsCompleted);
+    onToggle({ list, id, isCompleted: newIsCompleted });
   };
 
   handleDeleteClick = () => {
-    const { id, onDelete } = this.props;
-    onDelete({ list: 'Personal', id });
+    const { id, onDelete, list } = this.props;
+    onDelete({ list, id });
   };
 
   render() {
@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
 });
 
 Row.propTypes = {
+  list: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
   text: PropTypes.string.isRequired,
   isCompleted: PropTypes.bool.isRequired,

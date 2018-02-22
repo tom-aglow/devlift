@@ -80,19 +80,32 @@ class App extends Component {
     Keyboard.dismiss();
   };
 
-  handleCheckBoxToggle = (id, isCompleted) => {
-    const newItems = this.state.items.map(item => {
-      if (item.id !== id) return item;
-      return { ...item, isCompleted };
+  handleCheckBoxToggle = ({ list, id, isCompleted }) => {
+    const newSections = this.state.sections.map(section => {
+      if (section.title !== list) return section;
+
+      const newData = section.data.map(item => {
+        if (item.id !== id) return item;
+
+        return {
+          ...item,
+          isCompleted
+        };
+      });
+
+      return { ...section, data: newData };
     });
 
-    this.setState({ items: newItems });
+    const newState = Object.assign({}, this.state, { sections: newSections });
+
+    this.setState(newState);
   };
 
-  renderItem = ({ item }) => (
+  renderItem = ({ item, section }) => (
     <Todo
       key={item.id}
       {...item}
+      list={section.title}
       onToggle={this.handleCheckBoxToggle}
       onDelete={this.handleRemoveItem}
     />
