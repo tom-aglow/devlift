@@ -19,6 +19,7 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 class App extends Component {
   state = {
     inputValue: '',
+    editingId: 0,
     lists: [],
     todos: []
   };
@@ -29,18 +30,13 @@ class App extends Component {
     this.listenForItems(this.itemsRef);
   }
 
-  removeItemFromList({ todos, id }) {
-    return todos.filter(todo => todo.id !== id);
-  }
-
-  changeItemDataInList({ todos, id, newProps }) {
-    return todos.map(todo => {
-      if (todo.id !== id) return todo;
-
-      return {
-        ...todo,
-        ...newProps
-      };
+  listenForItems(itemsRef) {
+    itemsRef.on('value', snap => {
+      const newState = Object.assign({}, this.state, {
+        todos: snap.val().todos,
+        lists: snap.val().lists
+      });
+      this.setState(newState);
     });
   }
 
@@ -95,21 +91,47 @@ class App extends Component {
       id,
       newProps: { isCompleted }
     });
+
     const newState = Object.assign({}, this.state, { todos: newTodos });
 
     this.itemsRef.child('todos').set(newTodos);
     this.setState(newState);
   };
 
-  listenForItems(itemsRef) {
-    itemsRef.on('value', snap => {
-      const newState = Object.assign({}, this.state, {
-        todos: snap.val().todos,
-        lists: snap.val().lists
-      });
-      this.setState(newState);
+  changeItemDataInList({ todos, id, newProps }) {
+    return todos.map(todo => {
+      if (todo.id !== id) return todo;
+
+      return {
+        ...todo,
+        ...newProps
+      };
     });
   }
+
+  handleUpdateText = (id, text) => {
+    const { todos } = this.state;
+
+    const newTodos = this.changeItemDataInList({
+      todos,
+      id,
+      newProps: { text }
+    });
+    const newState = Object.assign({}, this.state, { todos: newTodos });
+
+    this.itemsRef.child('todos').set(newTodos);
+    this.setState(newState);
+  };
+
+  handleToggleEditing = id => {
+    const newState = Object.assign({}, this.state, { editingId: id });
+    this.setState(newState);
+  };
+
+  handleBlurEditing = () => {
+    const newState = Object.assign({}, this.state, { editingId: 0 });
+    this.setState(newState);
+  };
 
   keyExtractor = ({ id }) => id;
 
@@ -118,8 +140,12 @@ class App extends Component {
       <Todo
         key={item.id}
         {...item}
+        isEditing={this.state.editingId === item.id}
         onToggle={this.handleCheckBoxToggle}
+        onEditToggle={this.handleToggleEditing}
+        onUpdate={this.handleUpdateText}
         onDelete={this.handleRemoveItem}
+        onBlur={this.handleBlurEditing}
       />
     );
   };
