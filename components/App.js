@@ -29,21 +29,6 @@ class App extends Component {
     this.listenForItems(this.itemsRef);
   }
 
-  static addItemToList({ todos, listId, value }) {
-    const DEFAULT_ID = Date.now();
-    const DEFAULT_IS_COMPLETED = false;
-
-    return [
-      ...todos,
-      {
-        id: DEFAULT_ID,
-        text: value,
-        isCompleted: DEFAULT_IS_COMPLETED,
-        listId
-      }
-    ];
-  }
-
   removeItemFromList({ todos, id }) {
     return todos.filter(todo => todo.id !== id);
   }
@@ -61,20 +46,26 @@ class App extends Component {
 
   handleAddItem = ({ listId }) => {
     const { inputValue, todos } = this.state;
-
     if (!inputValue) return null;
 
-    const newTodos = App.addItemToList({
-      todos,
-      listId,
-      value: inputValue.trim()
-    });
+    const DEFAULT_ID = Date.now();
+    const DEFAULT_IS_COMPLETED = false;
+
+    const newTodo = {
+      id: DEFAULT_ID,
+      text: inputValue.trim(),
+      isCompleted: DEFAULT_IS_COMPLETED,
+      listId
+    };
+
+    const newTodos = [...todos, newTodo];
 
     const newState = Object.assign({}, this.state, {
       todos: newTodos,
       inputValue: ''
     });
 
+    this.itemsRef.child('todos').set(newTodos);
     this.setState(newState);
   };
 
@@ -114,6 +105,7 @@ class App extends Component {
         todos: snap.val().todos,
         lists: snap.val().lists
       });
+      console.log(newState);
       this.setState(newState);
     });
   }
