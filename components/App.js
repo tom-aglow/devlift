@@ -72,9 +72,10 @@ class App extends Component {
   handleRemoveItem = ({ id }) => {
     const { todos } = this.state;
 
-    const newTodos = this.removeItemFromList({ todos, id });
+    const newTodos = todos.filter(todo => todo.id !== id);
     const newState = Object.assign({}, this.state, { todos: newTodos });
 
+    this.itemsRef.child('todos').set(newTodos);
     this.setState(newState);
   };
 
@@ -96,6 +97,7 @@ class App extends Component {
     });
     const newState = Object.assign({}, this.state, { todos: newTodos });
 
+    this.itemsRef.child('todos').set(newTodos);
     this.setState(newState);
   };
 
@@ -105,7 +107,6 @@ class App extends Component {
         todos: snap.val().todos,
         lists: snap.val().lists
       });
-      console.log(newState);
       this.setState(newState);
     });
   }
