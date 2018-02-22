@@ -134,9 +134,22 @@ class App extends Component {
 
   keyExtractor = ({ id }) => id;
 
-  renderSectionHeader = ({ section }) => (
-    <Text style={styles.sectionHeader}>{section.title.toUpperCase()}</Text>
-  );
+  renderSectionHeader = ({ section }) => {
+    const todos = this.state.sections.find(
+      item => item.title === section.title
+    );
+    const openedTodoNum = todos.data.reduce((sum, cur) => {
+      if (!cur.isCompleted) sum += 1;
+      return sum;
+    }, 0);
+
+    return (
+      <View style={styles.sectionHeaderContainer}>
+        <Text style={styles.sectionHeader}>{section.title.toUpperCase()}</Text>
+        {!!openedTodoNum && <Text style={styles.counter}>{openedTodoNum}</Text>}
+      </View>
+    );
+  };
 
   render() {
     return (
@@ -170,19 +183,31 @@ const styles = StyleSheet.create({
       ios: { paddingTop: 30 }
     })
   },
+  sectionHeaderContainer: {
+    marginTop: 20,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
   sectionHeader: {
     fontSize: 20,
-    fontFamily: 'OpenSans-Bold',
-    marginTop: 20
+    fontFamily: 'OpenSans-Bold'
   },
   list: {
     backgroundColor: colors.white,
     paddingHorizontal: 20,
     width: '100%'
   },
-  separator: {
+  counter: {
+    width: 25,
+    height: 25,
     borderWidth: 1,
-    borderColor: '#F5FCFF'
+    borderColor: colors.black,
+    borderRadius: 12.5,
+    textAlign: 'center',
+    lineHeight: 23,
+    fontSize: 12
   }
 });
 
