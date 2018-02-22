@@ -19,6 +19,11 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 class App extends Component {
   state = {
     inputValue: '',
+    lists: [{ id: 1, title: 'Personal' }, { id: 2, title: 'Movies to Watch' }],
+    todos: [
+      { id: 1, text: 'foo', isCompleted: false, listId: 1 },
+      { id: 2, text: 'bar', isCompleted: true, listId: 2 }
+    ],
     sections: [
       {
         title: 'Personal',
@@ -32,6 +37,12 @@ class App extends Component {
       }
     ]
   };
+
+  itemsRef = firebaseApp.database().ref();
+
+  componentDidMount() {
+    this.listenForItems(this.itemsRef);
+  }
 
   addItemToList(sections, listName, value) {
     const DEFAULT_ID = Date.now();
@@ -121,6 +132,12 @@ class App extends Component {
 
     this.setState(newState);
   };
+
+  listenForItems(itemsRef) {
+    itemsRef.on('value', snap => {
+      console.log('value: ', snap.val());
+    });
+  }
 
   renderItem = ({ item, section }) => (
     <Todo
