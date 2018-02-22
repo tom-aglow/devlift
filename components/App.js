@@ -33,23 +33,58 @@ class App extends Component {
     ]
   };
 
-  handleAddItem = ({ list }) => {
-    if (!this.state.inputValue) return null;
+  addItemToList(sections, listName, value) {
+    const DEFAULT_ID = Date.now();
+    const DEFAULT_IS_COMPLETED = false;
 
-    const newSections = this.state.sections.map(section => {
-      if (section.title !== list) return section;
+    return sections.map(section => {
+      if (section.title !== listName) return section;
 
       const newData = [
         ...section.data,
         {
-          id: Date.now(),
-          text: this.state.inputValue,
-          isCompleted: false
+          id: DEFAULT_ID,
+          text: value,
+          isCompleted: DEFAULT_IS_COMPLETED
         }
       ];
 
       return { ...section, data: newData };
     });
+  }
+
+  removeItemFromList(sections, listName, id) {
+    return sections.map(section => {
+      if (section.title !== listName) return section;
+
+      const newData = section.data.filter(item => item.id !== id);
+      return { ...section, data: newData };
+    });
+  }
+
+  changeItemDataInList(sections, listName, id, newProps) {
+    return sections.map(section => {
+      if (section.title !== listName) return section;
+
+      const newData = section.data.map(item => {
+        if (item.id !== id) return item;
+
+        return {
+          ...item,
+          ...newProps
+        };
+      });
+
+      return { ...section, data: newData };
+    });
+  }
+
+  handleAddItem = ({ list }) => {
+    const { inputValue, sections } = this.state;
+
+    if (!inputValue) return null;
+
+    const newSections = this.addItemToList(sections, list, inputValue);
 
     const newState = Object.assign({}, this.state, {
       sections: newSections,
@@ -60,13 +95,9 @@ class App extends Component {
   };
 
   handleRemoveItem = ({ list, id }) => {
-    const newSections = this.state.sections.map(section => {
-      if (section.title !== list) return section;
+    const { sections } = this.state;
 
-      const newData = section.data.filter(item => item.id !== id);
-      return { ...section, data: newData };
-    });
-
+    const newSections = this.removeItemFromList(sections, list, id);
     const newState = Object.assign({}, this.state, { sections: newSections });
 
     this.setState(newState);
@@ -81,21 +112,11 @@ class App extends Component {
   };
 
   handleCheckBoxToggle = ({ list, id, isCompleted }) => {
-    const newSections = this.state.sections.map(section => {
-      if (section.title !== list) return section;
+    const { sections } = this.state;
 
-      const newData = section.data.map(item => {
-        if (item.id !== id) return item;
-
-        return {
-          ...item,
-          isCompleted
-        };
-      });
-
-      return { ...section, data: newData };
+    const newSections = this.changeItemDataInList(sections, list, id, {
+      isCompleted
     });
-
     const newState = Object.assign({}, this.state, { sections: newSections });
 
     this.setState(newState);
