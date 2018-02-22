@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import CheckBox from 'react-native-check-box';
 
-class Row extends Component {
+class Todo extends Component {
   handleToggleClick = () => {
-    const { list, id, onToggle, isCompleted } = this.props;
+    const { id, onToggle, isCompleted } = this.props;
     const newIsCompleted = !isCompleted;
-    onToggle({ list, id, isCompleted: newIsCompleted });
+    onToggle({ id, isCompleted: newIsCompleted });
   };
 
   handleDeleteClick = () => {
-    const { id, onDelete, list } = this.props;
-    onDelete({ list, id });
+    const { id, onDelete } = this.props;
+    onDelete({ id });
   };
 
   render() {
@@ -64,13 +64,13 @@ const styles = StyleSheet.create({
   }
 });
 
-Row.propTypes = {
-  list: PropTypes.string.isRequired,
+Todo.propTypes = {
   id: PropTypes.number.isRequired,
   text: PropTypes.string.isRequired,
   isCompleted: PropTypes.bool.isRequired,
+  listId: PropTypes.number.isRequired,
   onToggle: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired
 };
 
-export default Row;
+export default Todo;

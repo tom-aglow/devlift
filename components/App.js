@@ -23,18 +23,6 @@ class App extends Component {
     todos: [
       { id: 1, text: 'foo', isCompleted: false, listId: 1 },
       { id: 2, text: 'bar', isCompleted: true, listId: 2 }
-    ],
-    sections: [
-      {
-        title: 'Personal',
-        data: [{ id: 1, text: 'foo bar', isCompleted: false }],
-        key: 'Personal'
-      },
-      {
-        title: 'Movies to Watch',
-        data: [{ id: 2, text: 'Lost Highway', isCompleted: true }],
-        key: 'Movies to Watch'
-      }
     ]
   };
 
@@ -44,72 +32,60 @@ class App extends Component {
     this.listenForItems(this.itemsRef);
   }
 
-  addItemToList(sections, listName, value) {
+  static addItemToList({ todos, listId, value }) {
     const DEFAULT_ID = Date.now();
     const DEFAULT_IS_COMPLETED = false;
 
-    return sections.map(section => {
-      if (section.title !== listName) return section;
+    return [
+      ...todos,
+      {
+        id: DEFAULT_ID,
+        text: value,
+        isCompleted: DEFAULT_IS_COMPLETED,
+        listId
+      }
+    ];
+  }
 
-      const newData = [
-        ...section.data,
-        {
-          id: DEFAULT_ID,
-          text: value,
-          isCompleted: DEFAULT_IS_COMPLETED
-        }
-      ];
+  removeItemFromList({ todos, id }) {
+    return todos.filter(todo => todo.id !== id);
+  }
 
-      return { ...section, data: newData };
+  changeItemDataInList({ todos, id, newProps }) {
+    return todos.map(todo => {
+      if (todo.id !== id) return todo;
+
+      return {
+        ...todo,
+        ...newProps
+      };
     });
   }
 
-  removeItemFromList(sections, listName, id) {
-    return sections.map(section => {
-      if (section.title !== listName) return section;
-
-      const newData = section.data.filter(item => item.id !== id);
-      return { ...section, data: newData };
-    });
-  }
-
-  changeItemDataInList(sections, listName, id, newProps) {
-    return sections.map(section => {
-      if (section.title !== listName) return section;
-
-      const newData = section.data.map(item => {
-        if (item.id !== id) return item;
-
-        return {
-          ...item,
-          ...newProps
-        };
-      });
-
-      return { ...section, data: newData };
-    });
-  }
-
-  handleAddItem = ({ list }) => {
-    const { inputValue, sections } = this.state;
+  handleAddItem = ({ listId }) => {
+    const { inputValue, todos } = this.state;
 
     if (!inputValue) return null;
 
-    const newSections = this.addItemToList(sections, list, inputValue.trim());
+    const newTodos = App.addItemToList({
+      todos,
+      listId,
+      value: inputValue.trim()
+    });
 
     const newState = Object.assign({}, this.state, {
-      sections: newSections,
+      todos: newTodos,
       inputValue: ''
     });
 
     this.setState(newState);
   };
 
-  handleRemoveItem = ({ list, id }) => {
-    const { sections } = this.state;
+  handleRemoveItem = ({ id }) => {
+    const { todos } = this.state;
 
-    const newSections = this.removeItemFromList(sections, list, id);
-    const newState = Object.assign({}, this.state, { sections: newSections });
+    const newTodos = this.removeItemFromList({ todos, id });
+    const newState = Object.assign({}, this.state, { todos: newTodos });
 
     this.setState(newState);
   };
@@ -122,13 +98,15 @@ class App extends Component {
     Keyboard.dismiss();
   };
 
-  handleCheckBoxToggle = ({ list, id, isCompleted }) => {
-    const { sections } = this.state;
+  handleCheckBoxToggle = ({ id, isCompleted }) => {
+    const { todos } = this.state;
 
-    const newSections = this.changeItemDataInList(sections, list, id, {
-      isCompleted
+    const newTodos = this.changeItemDataInList({
+      todos,
+      id,
+      newProps: { isCompleted }
     });
-    const newState = Object.assign({}, this.state, { sections: newSections });
+    const newState = Object.assign({}, this.state, { todos: newTodos });
 
     this.setState(newState);
   };
@@ -139,23 +117,21 @@ class App extends Component {
     });
   }
 
-  renderItem = ({ item, section }) => (
-    <Todo
-      key={item.id}
-      {...item}
-      list={section.title}
-      onToggle={this.handleCheckBoxToggle}
-      onDelete={this.handleRemoveItem}
-    />
-  );
-
   keyExtractor = ({ id }) => id;
 
-  renderSectionHeader = ({ section }) => {
-    const todos = this.state.sections.find(
-      item => item.title === section.title
+  renderItem = ({ item }) => {
+    return (
+      <Todo
+        key={item.id}
+        {...item}
+        onToggle={this.handleCheckBoxToggle}
+        onDelete={this.handleRemoveItem}
+      />
     );
-    const openedTodoNum = todos.data.reduce((sum, cur) => {
+  };
+
+  renderSectionHeader = ({ section }) => {
+    const openedTodoNum = section.data.reduce((sum, cur) => {
       if (!cur.isCompleted) sum += 1;
       return sum;
     }, 0);
@@ -168,7 +144,22 @@ class App extends Component {
     );
   };
 
+  makeSectionsArray() {
+    const { lists, todos } = this.state;
+
+    return lists.map(({ id, title }) => {
+      const data = todos.filter(todo => todo.listId === id);
+      return {
+        title,
+        data,
+        key: title
+      };
+    });
+  }
+
   render() {
+    const sections = this.makeSectionsArray();
+
     return (
       <View style={styles.container}>
         <NewTodo
@@ -178,7 +169,7 @@ class App extends Component {
         />
         <SectionList
           style={styles.list}
-          sections={this.state.sections}
+          sections={sections}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
           renderSectionHeader={this.renderSectionHeader}

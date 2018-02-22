@@ -6,7 +6,7 @@ import colors from '../utils/colors.json';
 
 class NewTodo extends Component {
   handleSubmit = () => {
-    this.props.onAddItem({ list: 'Personal' });
+    this.props.onAddItem({ listId: 1 });
   };
 
   render() {
