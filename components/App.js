@@ -19,11 +19,8 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 class App extends Component {
   state = {
     inputValue: '',
-    lists: [{ id: 1, title: 'Personal' }, { id: 2, title: 'Movies to Watch' }],
-    todos: [
-      { id: 1, text: 'foo', isCompleted: false, listId: 1 },
-      { id: 2, text: 'bar', isCompleted: true, listId: 2 }
-    ]
+    lists: [],
+    todos: []
   };
 
   itemsRef = firebaseApp.database().ref();
@@ -113,7 +110,11 @@ class App extends Component {
 
   listenForItems(itemsRef) {
     itemsRef.on('value', snap => {
-      console.log('value: ', snap.val());
+      const newState = Object.assign({}, this.state, {
+        todos: snap.val().todos,
+        lists: snap.val().lists
+      });
+      this.setState(newState);
     });
   }
 
