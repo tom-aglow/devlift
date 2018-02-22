@@ -84,7 +84,7 @@ class App extends Component {
 
     if (!inputValue) return null;
 
-    const newSections = this.addItemToList(sections, list, inputValue);
+    const newSections = this.addItemToList(sections, list, inputValue.trim());
 
     const newState = Object.assign({}, this.state, {
       sections: newSections,
