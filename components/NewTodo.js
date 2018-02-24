@@ -5,7 +5,8 @@ import {
   View,
   TextInput,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView
 } from 'react-native';
 import RadioForm, {
   RadioButton,
@@ -16,7 +17,7 @@ import colors from '../utils/colors.json';
 
 class NewTodo extends Component {
   state = {
-    listId: 1,
+    listId: 0,
     areChipsVisible: false
   };
 
@@ -89,7 +90,9 @@ class NewTodo extends Component {
 
     return (
       <View>
-        <RadioForm formHorizontal={true}>{chips}</RadioForm>
+        <RadioForm formHorizontal={true} style={styles.chipsContainer}>
+          {chips}
+        </RadioForm>
       </View>
     );
   }
@@ -135,9 +138,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginRight: 20
   },
+  chipsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
   radioButtonWrapper: {
     height: 30,
-    marginLeft: 10,
+    marginRight: 10,
     borderColor: colors.primary,
     borderWidth: 1,
     borderTopRightRadius: 15,
