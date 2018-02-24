@@ -10,6 +10,8 @@ import {
 } from 'react-native';
 import CheckBox from 'react-native-check-box';
 
+import colors from '../utils/colors.json';
+
 class Todo extends Component {
   handleToggleClick = () => {
     const { id, onToggle, isCompleted } = this.props;
@@ -49,7 +51,10 @@ class Todo extends Component {
 
     const removeButton = isCompleted && (
       <TouchableOpacity onPress={this.handleDeleteClick}>
-        <Image source={require('../img/button_delete.png')} />
+        <Image
+          source={require('../img/button_delete.png')}
+          style={styles.actionImage}
+        />
       </TouchableOpacity>
     );
 
@@ -72,10 +77,16 @@ class Todo extends Component {
           isChecked={isCompleted}
           onClick={this.handleToggleClick}
           checkedImage={
-            <Image source={require('../img/checkbox_checked.png')} />
+            <Image
+              source={require('../img/checkbox_checked.png')}
+              style={styles.actionImage}
+            />
           }
           unCheckedImage={
-            <Image source={require('../img/checkbox_unchecked.png')} />
+            <Image
+              source={require('../img/checkbox_unchecked.png')}
+              style={styles.actionImage}
+            />
           }
         />
         {isEditing ? editingComponent : textComponent}
@@ -89,7 +100,7 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: 10,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between'
   },
   textWrapper: {
@@ -101,12 +112,18 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans-Light'
   },
   isCompleted: {
-    textDecorationLine: 'line-through'
+    textDecorationLine: 'line-through',
+    color: colors.mediumGrey
   },
   input: {
-    height: 100,
     flex: 1,
-    backgroundColor: '#eaeaa7'
+    fontSize: 16,
+    fontFamily: 'OpenSans-Light',
+    paddingTop: 0,
+    color: colors.primary
+  },
+  actionImage: {
+    marginTop: 4
   }
 });
 
