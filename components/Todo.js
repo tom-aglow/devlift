@@ -16,12 +16,12 @@ class Todo extends Component {
   handleToggleClick = () => {
     const { id, onToggle, isCompleted } = this.props;
     const newIsCompleted = !isCompleted;
-    onToggle({ id, isCompleted: newIsCompleted });
+    onToggle(id, newIsCompleted);
   };
 
   handleDeleteClick = () => {
     const { id, onDelete } = this.props;
-    onDelete({ id });
+    onDelete(id);
   };
 
   handleEditClick = () => {
@@ -35,10 +35,10 @@ class Todo extends Component {
     this.props.onUpdate(this.props.id, value);
   };
 
-  render() {
-    const { text, isCompleted, isEditing, onBlur } = this.props;
+  renderTextComponent() {
+    const { text, isCompleted } = this.props;
 
-    const textComponent = (
+    return (
       <TouchableOpacity
         style={styles.textWrapper}
         onLongPress={this.handleEditClick}
@@ -48,17 +48,27 @@ class Todo extends Component {
         </Text>
       </TouchableOpacity>
     );
+  }
 
-    const removeButton = isCompleted && (
-      <TouchableOpacity onPress={this.handleDeleteClick}>
-        <Image
-          source={require('../img/button_delete.png')}
-          style={styles.actionImage}
-        />
-      </TouchableOpacity>
+  renderRemoveButton() {
+    const { isCompleted } = this.props;
+
+    return (
+      isCompleted && (
+        <TouchableOpacity onPress={this.handleDeleteClick}>
+          <Image
+            source={require('../img/button_delete.png')}
+            style={styles.actionImage}
+          />
+        </TouchableOpacity>
+      )
     );
+  }
 
-    const editingComponent = (
+  renderEditingComponent() {
+    const { text, onBlur } = this.props;
+
+    return (
       <View style={styles.textWrapper}>
         <TextInput
           onChangeText={this.handleTextUpdate}
@@ -70,6 +80,10 @@ class Todo extends Component {
         />
       </View>
     );
+  }
+
+  render() {
+    const { isCompleted, isEditing } = this.props;
 
     return (
       <View style={styles.container}>
@@ -89,8 +103,8 @@ class Todo extends Component {
             />
           }
         />
-        {isEditing ? editingComponent : textComponent}
-        {!isEditing && removeButton}
+        {isEditing ? this.renderEditingComponent() : this.renderTextComponent()}
+        {!isEditing && this.renderRemoveButton()}
       </View>
     );
   }

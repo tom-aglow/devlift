@@ -40,7 +40,18 @@ class App extends Component {
     });
   }
 
-  handleAddItem = ({ listId }) => {
+  changeItemDataInList(todos, id, newProps) {
+    return todos.map(todo => {
+      if (todo.id !== id) return todo;
+
+      return {
+        ...todo,
+        ...newProps
+      };
+    });
+  }
+
+  handleAddItem = listId => {
     const { inputValue, todos } = this.state;
     if (!inputValue) return null;
 
@@ -65,7 +76,7 @@ class App extends Component {
     this.setState(newState);
   };
 
-  handleRemoveItem = ({ id }) => {
+  handleRemoveItem = id => {
     const { todos } = this.state;
 
     const newTodos = todos.filter(todo => todo.id !== id);
@@ -83,40 +94,20 @@ class App extends Component {
     Keyboard.dismiss();
   };
 
-  handleCheckBoxToggle = ({ id, isCompleted }) => {
+  handleCheckBoxToggle = (id, isCompleted) => {
     const { todos } = this.state;
 
-    const newTodos = this.changeItemDataInList({
-      todos,
-      id,
-      newProps: { isCompleted }
-    });
-
+    const newTodos = this.changeItemDataInList(todos, id, { isCompleted });
     const newState = Object.assign({}, this.state, { todos: newTodos });
 
     this.itemsRef.child('todos').set(newTodos);
     this.setState(newState);
   };
 
-  changeItemDataInList({ todos, id, newProps }) {
-    return todos.map(todo => {
-      if (todo.id !== id) return todo;
-
-      return {
-        ...todo,
-        ...newProps
-      };
-    });
-  }
-
   handleUpdateText = (id, text) => {
     const { todos } = this.state;
 
-    const newTodos = this.changeItemDataInList({
-      todos,
-      id,
-      newProps: { text }
-    });
+    const newTodos = this.changeItemDataInList(todos, id, { text });
     const newState = Object.assign({}, this.state, { todos: newTodos });
 
     this.itemsRef.child('todos').set(newTodos);

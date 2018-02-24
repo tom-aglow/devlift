@@ -21,7 +21,7 @@ class NewTodo extends Component {
   };
 
   handleSubmit = () => {
-    this.props.onAddItem({ listId: this.state.listId });
+    this.props.onAddItem(this.state.listId);
   };
 
   handleRadioButtonSelect = value => {
