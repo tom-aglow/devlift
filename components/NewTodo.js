@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, TextInput, Image } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  Image,
+  TouchableOpacity
+} from 'react-native';
 import RadioForm, {
   RadioButton,
   RadioButtonLabel
@@ -10,16 +16,28 @@ import colors from '../utils/colors.json';
 
 class NewTodo extends Component {
   state = {
-    listId: 1
+    listId: 1,
+    areChipsVisible: false
   };
 
   handleSubmit = () => {
     this.props.onAddItem({ listId: this.state.listId });
   };
 
-  onPress = value => {
+  handleRadioButtonSelect = value => {
     const newState = Object.assign({}, this.state, { listId: value });
     this.setState(newState);
+  };
+
+  handleInputFocus = () => {
+    const newState = Object.assign({}, this.state, { areChipsVisible: true });
+    this.setState(newState);
+  };
+
+  handleInputBlur = () => {
+    const newState = Object.assign({}, this.state, { areChipsVisible: false });
+    this.setState(newState);
+    this.props.onChange('');
   };
 
   renderInput() {
@@ -31,12 +49,16 @@ class NewTodo extends Component {
           value={inputValue}
           onChangeText={onChange}
           onSubmitEditing={this.handleSubmit}
+          onFocus={this.handleInputFocus}
+          onBlur={this.handleInputBlur}
           placeholder="I want to..."
           blurOnSubmit={false}
           returnKeyType="done"
           style={styles.input}
         />
-        <Image source={require('../img/button_add.png')} />
+        <TouchableOpacity onPress={this.handleSubmit}>
+          <Image source={require('../img/button_add.png')} />
+        </TouchableOpacity>
       </View>
     );
   }
@@ -51,7 +73,7 @@ class NewTodo extends Component {
             obj={{ label: title, value: id }}
             index={id}
             labelHorizontal={true}
-            onPress={this.onPress}
+            onPress={this.handleRadioButtonSelect}
             labelStyle={[
               styles.radioButton,
               isActive && styles.radioButtonActive
@@ -73,12 +95,12 @@ class NewTodo extends Component {
   }
 
   render() {
-    console.log(this.state.listId);
+    const { areChipsVisible } = this.state;
 
     return (
       <View style={styles.header}>
         {this.renderInput()}
-        {this.renderListChips()}
+        {areChipsVisible && this.renderListChips()}
       </View>
     );
   }
