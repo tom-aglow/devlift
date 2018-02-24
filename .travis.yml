@@ -10,6 +10,7 @@ branches:
   - master
 
 before_script:
+  - cp credentials.example.json credentials.json
   - nvm install 8.9.1
   - yarn install
   - yarn global add codecov
