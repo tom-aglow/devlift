@@ -98,7 +98,7 @@ class Todo extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 10,
+    paddingVertical: 5,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between'

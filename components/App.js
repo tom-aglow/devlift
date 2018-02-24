@@ -184,6 +184,7 @@ class App extends Component {
       <View style={styles.container}>
         <NewTodo
           inputValue={this.state.inputValue}
+          lists={this.state.lists}
           onAddItem={this.handleAddItem}
           onChange={this.handleInputChange}
         />
@@ -213,6 +214,7 @@ const styles = StyleSheet.create({
   },
   sectionHeaderContainer: {
     marginTop: 20,
+    marginBottom: 5,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
