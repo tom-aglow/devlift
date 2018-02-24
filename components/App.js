@@ -19,87 +19,70 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 class App extends Component {
   state = {
     inputValue: '',
-    sections: [
-      {
-        title: 'Personal',
-        data: [{ id: 1, text: 'foo bar', isCompleted: false }],
-        key: 'Personal'
-      },
-      {
-        title: 'Movies to Watch',
-        data: [{ id: 2, text: 'Lost Highway', isCompleted: true }],
-        key: 'Movies to Watch'
-      }
-    ]
+    editingId: 0,
+    lists: [],
+    todos: []
   };
 
-  addItemToList(sections, listName, value) {
+  itemsRef = firebaseApp.database().ref();
+
+  componentDidMount() {
+    this.listenForItems(this.itemsRef);
+  }
+
+  listenForItems(itemsRef) {
+    itemsRef.on('value', snap => {
+      const newState = Object.assign({}, this.state, {
+        todos: snap.val().todos,
+        lists: snap.val().lists
+      });
+      this.setState(newState);
+    });
+  }
+
+  changeItemDataInList(todos, id, newProps) {
+    return todos.map(todo => {
+      if (todo.id !== id) return todo;
+
+      return {
+        ...todo,
+        ...newProps
+      };
+    });
+  }
+
+  handleAddItem = listId => {
+    const { inputValue, todos } = this.state;
+    if (!inputValue) return null;
+
     const DEFAULT_ID = Date.now();
     const DEFAULT_IS_COMPLETED = false;
 
-    return sections.map(section => {
-      if (section.title !== listName) return section;
+    const newTodo = {
+      id: DEFAULT_ID,
+      text: inputValue.trim(),
+      isCompleted: DEFAULT_IS_COMPLETED,
+      listId
+    };
 
-      const newData = [
-        ...section.data,
-        {
-          id: DEFAULT_ID,
-          text: value,
-          isCompleted: DEFAULT_IS_COMPLETED
-        }
-      ];
-
-      return { ...section, data: newData };
-    });
-  }
-
-  removeItemFromList(sections, listName, id) {
-    return sections.map(section => {
-      if (section.title !== listName) return section;
-
-      const newData = section.data.filter(item => item.id !== id);
-      return { ...section, data: newData };
-    });
-  }
-
-  changeItemDataInList(sections, listName, id, newProps) {
-    return sections.map(section => {
-      if (section.title !== listName) return section;
-
-      const newData = section.data.map(item => {
-        if (item.id !== id) return item;
-
-        return {
-          ...item,
-          ...newProps
-        };
-      });
-
-      return { ...section, data: newData };
-    });
-  }
-
-  handleAddItem = ({ list }) => {
-    const { inputValue, sections } = this.state;
-
-    if (!inputValue) return null;
-
-    const newSections = this.addItemToList(sections, list, inputValue);
+    const newTodos = [...todos, newTodo];
 
     const newState = Object.assign({}, this.state, {
-      sections: newSections,
+      todos: newTodos,
       inputValue: ''
     });
 
+    this.itemsRef.child('todos').set(newTodos);
     this.setState(newState);
   };
 
-  handleRemoveItem = ({ list, id }) => {
-    const { sections } = this.state;
+  handleRemoveItem = id => {
+    const { todos } = this.state;
 
-    const newSections = this.removeItemFromList(sections, list, id);
-    const newState = Object.assign({}, this.state, { sections: newSections });
+    const newTodos = todos.filter(todo => todo.id !== id);
+    const newState = Object.assign({}, this.state, { todos: newTodos });
 
+    this.itemsRef.child('todos').set(newTodos);
     this.setState(newState);
   };
 
@@ -111,34 +94,55 @@ class App extends Component {
     Keyboard.dismiss();
   };
 
-  handleCheckBoxToggle = ({ list, id, isCompleted }) => {
-    const { sections } = this.state;
+  handleCheckBoxToggle = (id, isCompleted) => {
+    const { todos } = this.state;
 
-    const newSections = this.changeItemDataInList(sections, list, id, {
-      isCompleted
-    });
-    const newState = Object.assign({}, this.state, { sections: newSections });
+    const newTodos = this.changeItemDataInList(todos, id, { isCompleted });
+    const newState = Object.assign({}, this.state, { todos: newTodos });
 
+    this.itemsRef.child('todos').set(newTodos);
     this.setState(newState);
   };
 
-  renderItem = ({ item, section }) => (
-    <Todo
-      key={item.id}
-      {...item}
-      list={section.title}
-      onToggle={this.handleCheckBoxToggle}
-      onDelete={this.handleRemoveItem}
-    />
-  );
+  handleUpdateText = (id, text) => {
+    const { todos } = this.state;
+
+    const newTodos = this.changeItemDataInList(todos, id, { text });
+    const newState = Object.assign({}, this.state, { todos: newTodos });
+
+    this.itemsRef.child('todos').set(newTodos);
+    this.setState(newState);
+  };
+
+  handleToggleEditing = id => {
+    const newState = Object.assign({}, this.state, { editingId: id });
+    this.setState(newState);
+  };
+
+  handleBlurEditing = () => {
+    const newState = Object.assign({}, this.state, { editingId: 0 });
+    this.setState(newState);
+  };
 
   keyExtractor = ({ id }) => id;
 
-  renderSectionHeader = ({ section }) => {
-    const todos = this.state.sections.find(
-      item => item.title === section.title
+  renderItem = ({ item }) => {
+    return (
+      <Todo
+        key={item.id}
+        {...item}
+        isEditing={this.state.editingId === item.id}
+        onToggle={this.handleCheckBoxToggle}
+        onEditToggle={this.handleToggleEditing}
+        onUpdate={this.handleUpdateText}
+        onDelete={this.handleRemoveItem}
+        onBlur={this.handleBlurEditing}
+      />
     );
-    const openedTodoNum = todos.data.reduce((sum, cur) => {
+  };
+
+  renderSectionHeader = ({ section }) => {
+    const openedTodoNum = section.data.reduce((sum, cur) => {
       if (!cur.isCompleted) sum += 1;
       return sum;
     }, 0);
@@ -151,17 +155,33 @@ class App extends Component {
     );
   };
 
+  makeSectionsArray() {
+    const { lists, todos } = this.state;
+
+    return lists.map(({ id, title }) => {
+      const data = todos.filter(todo => todo.listId === id);
+      return {
+        title,
+        data,
+        key: title
+      };
+    });
+  }
+
   render() {
+    const sections = this.makeSectionsArray();
+
     return (
       <View style={styles.container}>
         <NewTodo
           inputValue={this.state.inputValue}
+          lists={this.state.lists}
           onAddItem={this.handleAddItem}
           onChange={this.handleInputChange}
         />
         <SectionList
           style={styles.list}
-          sections={this.state.sections}
+          sections={sections}
           keyExtractor={this.keyExtractor}
           renderItem={this.renderItem}
           renderSectionHeader={this.renderSectionHeader}
@@ -185,6 +205,7 @@ const styles = StyleSheet.create({
   },
   sectionHeaderContainer: {
     marginTop: 20,
+    marginBottom: 5,
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',

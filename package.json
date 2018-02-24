@@ -13,7 +13,8 @@
     "firebase": "^4.10.0",
     "react": "16.2.0",
     "react-native": "0.53.3",
-    "react-native-check-box": "^2.0.2"
+    "react-native-check-box": "^2.0.2",
+    "react-native-simple-radio-button": "^2.7.1"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.2",

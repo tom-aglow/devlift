@@ -1,44 +1,110 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  TextInput
+} from 'react-native';
 import CheckBox from 'react-native-check-box';
 
-class Row extends Component {
+import colors from '../utils/colors.json';
+
+class Todo extends Component {
   handleToggleClick = () => {
-    const { list, id, onToggle, isCompleted } = this.props;
+    const { id, onToggle, isCompleted } = this.props;
     const newIsCompleted = !isCompleted;
-    onToggle({ list, id, isCompleted: newIsCompleted });
+    onToggle(id, newIsCompleted);
   };
 
   handleDeleteClick = () => {
-    const { id, onDelete, list } = this.props;
-    onDelete({ list, id });
+    const { id, onDelete } = this.props;
+    onDelete(id);
   };
 
-  render() {
+  handleEditClick = () => {
+    const { id, onEditToggle, isCompleted } = this.props;
+    if (!isCompleted) {
+      onEditToggle(id);
+    }
+  };
+
+  handleTextUpdate = value => {
+    this.props.onUpdate(this.props.id, value);
+  };
+
+  renderTextComponent() {
     const { text, isCompleted } = this.props;
+
+    return (
+      <TouchableOpacity
+        style={styles.textWrapper}
+        onLongPress={this.handleEditClick}
+      >
+        <Text style={[styles.text, isCompleted && styles.isCompleted]}>
+          {text}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  renderRemoveButton() {
+    const { isCompleted } = this.props;
+
+    return (
+      isCompleted && (
+        <TouchableOpacity onPress={this.handleDeleteClick}>
+          <Image
+            source={require('../img/button_delete.png')}
+            style={styles.actionImage}
+          />
+        </TouchableOpacity>
+      )
+    );
+  }
+
+  renderEditingComponent() {
+    const { text, onBlur } = this.props;
+
+    return (
+      <View style={styles.textWrapper}>
+        <TextInput
+          onChangeText={this.handleTextUpdate}
+          autoFocus
+          value={text}
+          style={styles.input}
+          onBlur={onBlur}
+          multiline
+        />
+      </View>
+    );
+  }
+
+  render() {
+    const { isCompleted, isEditing } = this.props;
+
     return (
       <View style={styles.container}>
         <CheckBox
           isChecked={isCompleted}
           onClick={this.handleToggleClick}
           checkedImage={
-            <Image source={require('../img/checkbox_checked.png')} />
+            <Image
+              source={require('../img/checkbox_checked.png')}
+              style={styles.actionImage}
+            />
           }
           unCheckedImage={
-            <Image source={require('../img/checkbox_unchecked.png')} />
+            <Image
+              source={require('../img/checkbox_unchecked.png')}
+              style={styles.actionImage}
+            />
           }
         />
-        <View style={styles.textWrapper}>
-          <Text style={[styles.text, isCompleted && styles.isCompleted]}>
-            {text}
-          </Text>
-        </View>
-        {isCompleted && (
-          <TouchableOpacity onPress={this.handleDeleteClick}>
-            <Image source={require('../img/button_delete.png')} />
-          </TouchableOpacity>
-        )}
+        {isEditing ? this.renderEditingComponent() : this.renderTextComponent()}
+        {!isEditing && this.renderRemoveButton()}
       </View>
     );
   }
@@ -46,9 +112,9 @@ class Row extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 10,
+    paddingVertical: 5,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between'
   },
   textWrapper: {
@@ -60,17 +126,32 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans-Light'
   },
   isCompleted: {
-    textDecorationLine: 'line-through'
+    textDecorationLine: 'line-through',
+    color: colors.mediumGrey
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: 'OpenSans-Light',
+    paddingTop: 0,
+    color: colors.primary
+  },
+  actionImage: {
+    marginTop: 4
   }
 });
 
-Row.propTypes = {
-  list: PropTypes.string.isRequired,
+Todo.propTypes = {
   id: PropTypes.number.isRequired,
   text: PropTypes.string.isRequired,
   isCompleted: PropTypes.bool.isRequired,
+  isEditing: PropTypes.bool.isRequired,
+  listId: PropTypes.number.isRequired,
   onToggle: PropTypes.func.isRequired,
+  onEditToggle: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired
 };
 
-export default Row;
+export default Todo;

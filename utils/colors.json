@@ -1,5 +1,7 @@
 {
   "white": "#FBFBFB",
   "lightGrey": "#E7E7E7",
-  "black": "#202020"
+  "mediumGrey": "#C2C2C2",
+  "black": "#202020",
+  "primary": "#12B4C2"
 }
