@@ -56,6 +56,7 @@ class NewTodo extends Component {
           blurOnSubmit={false}
           returnKeyType="done"
           style={styles.input}
+          data-test="new-todo-input"
         />
         <TouchableOpacity onPress={this.handleSubmit}>
           <Image source={require('../img/button_add.png')} />
@@ -83,6 +84,7 @@ class NewTodo extends Component {
               styles.radioButtonWrapper,
               isActive && styles.radioButtonWrapperActive
             ]}
+            data-test="list-chip"
           />
         </RadioButton>
       );
@@ -109,7 +111,7 @@ class NewTodo extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 10,
     flexDirection: 'column',

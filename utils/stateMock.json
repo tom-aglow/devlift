@@ -1,0 +1,13 @@
+{
+  "todos": [
+    { "id": 1, "text": "foo", "isCompleted": false, "listId": 0 },
+    { "id": 2, "text": "bar", "isCompleted": true, "listId": 1 }
+  ],
+  "lists": [
+    { "id": 0, "title": "Personal" },
+    { "id": 1, "title": "Movies to watch" }
+  ],
+  "inputValue": "",
+  "editingId": 0,
+  "openLists": [0]
+}

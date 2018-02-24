@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#FBFBFB",
+      "elevation": 4,
+      "flexDirection": "column",
+      "paddingBottom": 5,
+      "paddingHorizontal": 10,
+      "paddingTop": 15,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "justifyContent": "space-around",
+        "marginBottom": 15,
+        "width": "100%",
+      }
+    }
+  >
+    <TextInput
+      allowFontScaling={true}
+      blurOnSubmit={false}
+      data-test="new-todo-input"
+      onBlur={[Function]}
+      onChangeText={[Function]}
+      onFocus={[Function]}
+      onSubmitEditing={[Function]}
+      placeholder="I want to..."
+      returnKeyType="done"
+      style={
+        Object {
+          "borderBottomLeftRadius": 15,
+          "borderBottomRightRadius": 15,
+          "borderColor": "#E7E7E7",
+          "borderTopLeftRadius": 15,
+          "borderTopRightRadius": 15,
+          "borderWidth": 1,
+          "flex": 1,
+          "fontFamily": "OpenSans-Light",
+          "height": 30,
+          "marginRight": 20,
+          "paddingHorizontal": 15,
+        }
+      }
+      value=""
+    />
+    <TouchableOpacity
+      activeOpacity={0.2}
+      onPress={[Function]}
+    >
+      <Image
+        source={
+          Object {
+            "testUri": "../../../img/button_add.png",
+          }
+        }
+      />
+    </TouchableOpacity>
+  </View>
+</View>
+`;
