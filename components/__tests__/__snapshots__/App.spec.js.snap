@@ -5,7 +5,7 @@ exports[`renders correctly 1`] = `
   style={
     Object {
       "alignItems": "center",
-      "backgroundColor": "#F5FCFF",
+      "backgroundColor": "#FBFBFB",
       "flex": 1,
       "justifyContent": "flex-end",
       "paddingTop": 30,
@@ -14,47 +14,30 @@ exports[`renders correctly 1`] = `
 >
   <NewTodo
     inputValue=""
+    lists={Array []}
     onAddItem={[Function]}
     onChange={[Function]}
   />
-  <SectionList
-    data={Array []}
-    disableVirtualization={false}
-    enableEmptySections={true}
-    horizontal={false}
-    initialNumToRender={10}
-    keyExtractor={[Function]}
-    maxToRenderPerBatch={10}
-    onEndReachedThreshold={2}
-    onScroll={[Function]}
-    renderItem={[Function]}
-    renderSectionHeader={[Function]}
-    scrollEventThrottle={50}
-    sections={
+  <ExpandableList
+    data-test="todo-list"
+    dataSource={Array []}
+    headerKey="title"
+    isOpen={false}
+    memberKey="data"
+    openOptions={
       Array [
-        Object {
-          "data": Array [
-            Object {
-              "id": 1,
-              "isCompleted": false,
-              "text": "foo bar",
-            },
-          ],
-          "key": "Personal",
-          "title": "Personal",
-        },
+        0,
       ]
     }
-    stickySectionHeadersEnabled={true}
+    renderRow={[Function]}
+    renderSectionHeaderX={[Function]}
     style={
       Object {
-        "backgroundColor": "#b0beff",
-        "paddingHorizontal": 10,
+        "backgroundColor": "#FBFBFB",
+        "paddingHorizontal": 20,
         "width": "100%",
       }
     }
-    updateCellsBatchingPeriod={50}
-    windowSize={21}
   />
 </View>
 `;

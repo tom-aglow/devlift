@@ -13,24 +13,32 @@ class App extends Component {
     inputValue: '',
     editingId: 0,
     lists: [],
-    todos: []
+    todos: [],
+    openLists: [0]
   };
 
-  firebaseApp = firebase.initializeApp(firebaseConfig);
-  itemsRef = this.firebaseApp.database().ref();
+  itemsRef = {};
 
   componentDidMount() {
+    App.firebaseInit();
     this.listenForItems(this.itemsRef);
   }
 
+  static firebaseInit() {
+    const firebaseApp = firebase.initializeApp(firebaseConfig);
+    this.itemsRef = firebaseApp.database().ref();
+  }
+
   listenForItems(itemsRef) {
-    itemsRef.on('value', snap => {
-      const newState = Object.assign({}, this.state, {
-        todos: snap.val().todos,
-        lists: snap.val().lists
+    if (itemsRef.hasOwnProperty('on')) {
+      itemsRef.on('value', snap => {
+        const newState = Object.assign({}, this.state, {
+          todos: snap.val().todos,
+          lists: snap.val().lists
+        });
+        this.setState(newState);
       });
-      this.setState(newState);
-    });
+    }
   }
 
   changeItemDataInList(todos, id, newProps) {
@@ -172,7 +180,8 @@ class App extends Component {
           memberKey="data"
           renderRow={this.renderItem}
           renderSectionHeaderX={this.renderSectionHeader}
-          openOptions={[0]}
+          openOptions={this.state.openLists}
+          data-test="todo-list"
         />
       </View>
     );

@@ -102,6 +102,7 @@ class Todo extends Component {
               style={styles.actionImage}
             />
           }
+          data-test="todo-checkbox"
         />
         {isEditing ? this.renderEditingComponent() : this.renderTextComponent()}
         {!isEditing && this.renderRemoveButton()}
