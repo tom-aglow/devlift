@@ -42,6 +42,7 @@ class Todo extends Component {
       <TouchableOpacity
         style={styles.textWrapper}
         onLongPress={this.handleEditClick}
+        data-test="todo-text"
       >
         <Text style={[styles.text, isCompleted && styles.isCompleted]}>
           {text}
@@ -59,6 +60,7 @@ class Todo extends Component {
           <Image
             source={require('../img/button_delete.png')}
             style={styles.actionImage}
+            data-test="btn-remove-todo"
           />
         </TouchableOpacity>
       )
@@ -77,6 +79,7 @@ class Todo extends Component {
           style={styles.input}
           onBlur={onBlur}
           multiline
+          data-test="todo-edit-input"
         />
       </View>
     );

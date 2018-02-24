@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "flex-start",
+      "flexDirection": "row",
+      "justifyContent": "space-between",
+      "paddingVertical": 5,
+    }
+  }
+>
+  <CheckBox
+    checkedImage={
+      <Image
+        source={
+          Object {
+            "testUri": "../../../img/checkbox_checked.png",
+          }
+        }
+        style={
+          Object {
+            "marginTop": 4,
+          }
+        }
+      />
+    }
+    data-test="todo-checkbox"
+    isChecked={false}
+    isIndeterminate={false}
+    leftTextStyle={Object {}}
+    onClick={[Function]}
+    rightTextStyle={Object {}}
+    unCheckedImage={
+      <Image
+        source={
+          Object {
+            "testUri": "../../../img/checkbox_unchecked.png",
+          }
+        }
+        style={
+          Object {
+            "marginTop": 4,
+          }
+        }
+      />
+    }
+  />
+  <TouchableOpacity
+    activeOpacity={0.2}
+    data-test="todo-text"
+    onLongPress={[Function]}
+    style={
+      Object {
+        "flex": 1,
+        "marginLeft": 15,
+      }
+    }
+  >
+    <Text
+      accessible={true}
+      allowFontScaling={true}
+      ellipsizeMode="tail"
+      style={
+        Array [
+          Object {
+            "fontFamily": "OpenSans-Light",
+            "fontSize": 16,
+          },
+          false,
+        ]
+      }
+    >
+      foo
+    </Text>
+  </TouchableOpacity>
+</View>
+`;
