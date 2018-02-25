@@ -160,7 +160,9 @@ class App extends Component {
     const { lists, todos } = this.state;
 
     return lists.map(({ id, title }) => {
-      const data = todos.filter(todo => todo.listId === id);
+      const data = todos
+        .filter(todo => todo.listId === id)
+        .sort((a, b) => a.isCompleted - b.isCompleted);
       return { title, data };
     });
   }
