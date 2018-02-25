@@ -6,6 +6,8 @@ const defaultProps = {};
 
 const helper = new TestHelper(App, defaultProps);
 
+const firebase = {};
+
 beforeAll(() => {
   setupGlobalObject();
 });
@@ -24,4 +26,20 @@ it('renders correct amount of todos', () => {
     stateMock.todos.filter(({ listId }) => stateMock.openLists.includes(listId))
       .length
   );
+});
+
+it('allows user to edit text', () => {
+  const wrapper = helper.mountComponent();
+  wrapper.setState(stateMock);
+  const todoText = wrapper.find(sel('todo-text'));
+  todoText.props().onLongPress();
+  // console.log(todoText.props());
+
+  let input = wrapper.update().find(sel('todo-edit-input'));
+  expect(input).not.toHaveLength(0);
+
+  // input.at(0).props().onChangeText({value: 'new foo'});
+  input = wrapper.update().find(sel('todo-edit-input'));
+
+  // console.log(input.at(1).html());
 });

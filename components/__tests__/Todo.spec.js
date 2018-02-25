@@ -46,6 +46,13 @@ it('renders todo text when state is not editing', () => {
   expect(todoHtml).toContain(stateMock.todos[INDEX].text);
 });
 
+it('renders input when state is editing', () => {
+  const wrapper = helper.mountComponent({ isEditing: true }, true);
+  const input = wrapper.find(sel('todo-edit-input'));
+
+  expect(input).toHaveLength(1);
+});
+
 it('hides remove button in editing mode', () => {
   const wrapper = helper.mountComponent({ isEditing: true }, true);
   const removeBtn = wrapper.find(sel('btn-remove-todo'));
