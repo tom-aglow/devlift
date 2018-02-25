@@ -150,9 +150,13 @@ class App extends Component {
     ).length;
 
     return (
-      <View style={styles.sectionHeaderContainer}>
+      <View style={styles.sectionHeaderContainer} data-test="list-header">
         <Text style={styles.sectionHeader}>{section.toUpperCase()}</Text>
-        {!!openedTodoNum && <Text style={styles.counter}>{openedTodoNum}</Text>}
+        {!!openedTodoNum && (
+          <Text style={styles.counter} data-test="open-todo-badge">
+            {openedTodoNum}
+          </Text>
+        )}
       </View>
     );
   };

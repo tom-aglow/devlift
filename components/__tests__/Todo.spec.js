@@ -67,7 +67,7 @@ it('does not allow edit completed items', () => {
     true
   );
   const todoText = wrapper.find(sel('todo-text'));
-  todoText.simulate('longPress');
+  todoText.props().onLongPress();
 
   expect(onEditToggle).toHaveBeenCalledTimes(0);
 });

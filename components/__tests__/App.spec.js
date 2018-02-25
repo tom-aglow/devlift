@@ -68,6 +68,7 @@ describe('firebase app', () => {
       .first()
       .props()
       .onBlur();
+
     input = wrapper
       .update()
       .find(Todo)
@@ -138,5 +139,21 @@ describe('firebase app', () => {
 
     expect(newTodos).toHaveLength(todos.length + 1);
     expect(wrapper.html()).toContain(NEW_TODO_TEXT);
+  });
+
+  it('shows number of uncompleted items in the list header', () => {
+    const INDEX = 0;
+    const listId = stateMock.lists[INDEX].id;
+    const uncompletedTodos = stateMock.todos.filter(
+      todo => todo.listId === listId && !todo.isCompleted
+    );
+
+    const header = wrapper
+      .find(sel('list-header'))
+      .at(INDEX)
+      .find(sel('open-todo-badge'))
+      .first();
+
+    expect(header.text()).toBe(uncompletedTodos.length.toString());
   });
 });

@@ -40,7 +40,15 @@
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>/testSetup.js",
     "preset": "react-native",
-    "snapshotSerializers": ["./node_modules/enzyme-to-json/serializer"]
+    "snapshotSerializers": ["./node_modules/enzyme-to-json/serializer"],
+    "collectCoverageFrom": [
+      "**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!index.js",
+      "!config.js",
+      "!coverage/**",
+      "!utils/testUtils.js"
+    ]
   },
   "lint-staged": {
     "*.{js,json,css,md}": ["prettier --write --single-quote", "git add"]
