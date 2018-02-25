@@ -9,3 +9,4 @@
 * run `yarn` or `npm install` for downloading necessary packages
 * run `cp credentials.example.json credentials.json` for copying and renaming credential file
 * fill the file with your firebase credentials
+* run `react-native run-ios` to launch the simulator

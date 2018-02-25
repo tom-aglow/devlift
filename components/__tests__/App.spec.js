@@ -112,7 +112,7 @@ describe('firebase app', () => {
 
   it('allows user to delete completed tasks', () => {
     const INDEX = 1;
-    const todosLength = wrapper.find(Todo).length;
+    const todos = wrapper.find(Todo);
     expect(stateMock.todos[INDEX].isCompleted).toBe(true);
 
     let removeBtn = wrapper
@@ -121,7 +121,22 @@ describe('firebase app', () => {
       .find(sel('remove-todo-btn'));
     removeBtn.props().onPress();
 
-    const newTodosLength = wrapper.update().find(Todo).length;
-    expect(newTodosLength).toBe(todosLength - 1);
+    const newTodos = wrapper.update().find(Todo);
+    expect(newTodos).toHaveLength(todos.length - 1);
+  });
+
+  it('allows user to add new todo in the list', () => {
+    const todos = wrapper.find(Todo);
+    const NEW_TODO_TEXT = 'foo bar baz';
+
+    const input = wrapper.find(sel('new-todo-input')).first();
+    input.simulate('focus');
+    input.props().onChangeText(NEW_TODO_TEXT);
+    input.props().onSubmitEditing();
+
+    const newTodos = wrapper.update().find(Todo);
+
+    expect(newTodos).toHaveLength(todos.length + 1);
+    expect(wrapper.html()).toContain(NEW_TODO_TEXT);
   });
 });
