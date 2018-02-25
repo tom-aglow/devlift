@@ -56,11 +56,13 @@ class Todo extends Component {
 
     return (
       isCompleted && (
-        <TouchableOpacity onPress={this.handleDeleteClick}>
+        <TouchableOpacity
+          onPress={this.handleDeleteClick}
+          data-test="remove-todo-btn"
+        >
           <Image
             source={require('../img/button_delete.png')}
             style={styles.actionImage}
-            data-test="btn-remove-todo"
           />
         </TouchableOpacity>
       )
@@ -89,7 +91,7 @@ class Todo extends Component {
     const { isCompleted, isEditing } = this.props;
 
     return (
-      <View style={styles.container}>
+      <View style={styles.container} data-test="todo">
         <CheckBox
           isChecked={isCompleted}
           onClick={this.handleToggleClick}
