@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Keyboard, Platform } from 'react-native';
+import { StyleSheet, Text, View, Platform } from 'react-native';
 import ExpandableList from 'react-native-expandable-section-list';
 import * as firebase from 'firebase';
 
@@ -34,15 +34,14 @@ class App extends Component {
   }
 
   listenForItems(itemsRef) {
-    if (itemsRef.hasOwnProperty('on')) {
-      itemsRef.on('value', snap => {
-        const newState = Object.assign({}, this.state, {
-          todos: snap.val().todos,
-          lists: snap.val().lists
-        });
-        this.setState(newState);
+    itemsRef.once('value', snap => {
+      const newState = Object.assign({}, this.state, {
+        todos: snap.val().todos,
+        lists: snap.val().lists
       });
-    }
+
+      this.setState(newState);
+    });
   }
 
   changeItemDataInList(todos, id, newProps) {
@@ -93,10 +92,6 @@ class App extends Component {
 
   handleInputChange = inputValue => {
     this.setState({ inputValue });
-  };
-
-  handleScrollListView = () => {
-    Keyboard.dismiss();
   };
 
   handleCheckBoxToggle = (id, isCompleted) => {
