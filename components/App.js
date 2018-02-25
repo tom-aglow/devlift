@@ -34,15 +34,14 @@ class App extends Component {
   }
 
   listenForItems(itemsRef) {
-    if (itemsRef.hasOwnProperty('on')) {
-      itemsRef.on('value', snap => {
-        const newState = Object.assign({}, this.state, {
-          todos: snap.val().todos,
-          lists: snap.val().lists
-        });
-        this.setState(newState);
+    itemsRef.once('value', snap => {
+      const newState = Object.assign({}, this.state, {
+        todos: snap.val().todos,
+        lists: snap.val().lists
       });
-    }
+
+      this.setState(newState);
+    });
   }
 
   changeItemDataInList(todos, id, newProps) {
