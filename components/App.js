@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Keyboard, Platform } from 'react-native';
+import { StyleSheet, Text, View, Platform } from 'react-native';
 import ExpandableList from 'react-native-expandable-section-list';
 import * as firebase from 'firebase';
 
