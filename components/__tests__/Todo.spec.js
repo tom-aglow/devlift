@@ -27,14 +27,14 @@ it('renders correctly', () => {
 
 it('shows remove button if task is completed', () => {
   const wrapper = helper.mountComponent({ isCompleted: true }, true);
-  const removeBtn = wrapper.find(sel('btn-remove-todo'));
+  const removeBtn = wrapper.find(sel('remove-todo-btn'));
 
   expect(removeBtn).toHaveLength(1);
 });
 
 it('does not show remove button if task is not completed', () => {
   const wrapper = helper.mountComponent({ isCompleted: false }, true);
-  const removeBtn = wrapper.find(sel('btn-remove-todo'));
+  const removeBtn = wrapper.find(sel('remove-todo-btn'));
 
   expect(removeBtn).toHaveLength(0);
 });
@@ -55,7 +55,7 @@ it('renders input when state is editing', () => {
 
 it('hides remove button in editing mode', () => {
   const wrapper = helper.mountComponent({ isEditing: true }, true);
-  const removeBtn = wrapper.find(sel('btn-remove-todo'));
+  const removeBtn = wrapper.find(sel('remove-todo-btn'));
 
   expect(removeBtn).toHaveLength(0);
 });
