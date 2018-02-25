@@ -6,7 +6,7 @@ import * as firebase from 'firebase';
 import NewTodo from './NewTodo';
 import Todo from './Todo';
 import colors from '../utils/colors.json';
-import firebaseConfig from '../credentials.json';
+import firebaseConfig from '../config';
 
 class App extends Component {
   state = {
@@ -17,16 +17,20 @@ class App extends Component {
     openLists: [0]
   };
 
+  firebaseDb = {};
   itemsRef = {};
 
   componentDidMount() {
-    App.firebaseInit();
+    this.firebaseInit();
     this.listenForItems(this.itemsRef);
   }
 
-  static firebaseInit() {
-    const firebaseApp = firebase.initializeApp(firebaseConfig);
-    this.itemsRef = firebaseApp.database().ref();
+  firebaseInit() {
+    const firebaseApp = !firebase.apps.length
+      ? firebase.initializeApp(firebaseConfig)
+      : firebase.app();
+    this.firebaseDb = firebaseApp.database();
+    this.itemsRef = this.firebaseDb.ref();
   }
 
   listenForItems(itemsRef) {
