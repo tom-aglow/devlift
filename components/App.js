@@ -94,10 +94,6 @@ class App extends Component {
     this.setState({ inputValue });
   };
 
-  handleScrollListView = () => {
-    Keyboard.dismiss();
-  };
-
   handleCheckBoxToggle = (id, isCompleted) => {
     const { todos } = this.state;
 

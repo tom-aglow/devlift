@@ -5,8 +5,7 @@ import {
   View,
   TextInput,
   Image,
-  TouchableOpacity,
-  ScrollView
+  TouchableOpacity
 } from 'react-native';
 import RadioForm, {
   RadioButton,
