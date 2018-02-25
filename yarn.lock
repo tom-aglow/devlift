@@ -4807,6 +4807,12 @@ react-native-check-box@^2.0.2:
   dependencies:
     prop-types "^15.5.7"
 
+react-native-expandable-section-list@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-expandable-section-list/-/react-native-expandable-section-list-1.0.3.tgz#2fc514b76a85d2efba6e758e968f95b099eb4ce3"
+  dependencies:
+    prop-types "^15.6.0"
+
 react-native-mock@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/react-native-mock/-/react-native-mock-0.3.1.tgz#13d22433c5351a8a7fb8aedd7862b614d087851c"

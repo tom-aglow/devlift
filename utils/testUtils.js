@@ -1,11 +1,11 @@
-import React from "react";
-import { mount, shallow } from "enzyme";
-import { JSDOM } from "jsdom";
+import React from 'react';
+import { mount, shallow } from 'enzyme';
+import { JSDOM } from 'jsdom';
 
 export const sel = id => `[data-test="${id}"]`;
 
 export const setupGlobalObject = () => {
-  const jsdom = new JSDOM("<!doctype html><html><body></body></html>");
+  const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
   const { window } = jsdom;
   global.window = window;
   global.document = window.document;
@@ -24,7 +24,9 @@ export const TestHelper = class TestHelper {
     };
 
     if (isShallow) {
-      return shallow(React.createElement(this.component, propsToUse));
+      return shallow(React.createElement(this.component, propsToUse), {
+        disableLifecycleMethods: true
+      });
     }
 
     return mount(React.createElement(this.component, propsToUse));

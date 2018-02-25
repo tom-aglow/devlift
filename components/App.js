@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  SectionList,
-  Keyboard,
-  Platform
-} from 'react-native';
+import { StyleSheet, Text, View, Keyboard, Platform } from 'react-native';
+import ExpandableList from 'react-native-expandable-section-list';
 import * as firebase from 'firebase';
 
 import NewTodo from './NewTodo';
@@ -14,30 +8,37 @@ import Todo from './Todo';
 import colors from '../utils/colors.json';
 import firebaseConfig from '../credentials.json';
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
-
 class App extends Component {
   state = {
     inputValue: '',
     editingId: 0,
     lists: [],
-    todos: []
+    todos: [],
+    openLists: [0]
   };
 
-  itemsRef = firebaseApp.database().ref();
+  itemsRef = {};
 
   componentDidMount() {
+    App.firebaseInit();
     this.listenForItems(this.itemsRef);
   }
 
+  static firebaseInit() {
+    const firebaseApp = firebase.initializeApp(firebaseConfig);
+    this.itemsRef = firebaseApp.database().ref();
+  }
+
   listenForItems(itemsRef) {
-    itemsRef.on('value', snap => {
-      const newState = Object.assign({}, this.state, {
-        todos: snap.val().todos,
-        lists: snap.val().lists
+    if (itemsRef.hasOwnProperty('on')) {
+      itemsRef.on('value', snap => {
+        const newState = Object.assign({}, this.state, {
+          todos: snap.val().todos,
+          lists: snap.val().lists
+        });
+        this.setState(newState);
       });
-      this.setState(newState);
-    });
+    }
   }
 
   changeItemDataInList(todos, id, newProps) {
@@ -124,14 +125,12 @@ class App extends Component {
     this.setState(newState);
   };
 
-  keyExtractor = ({ id }) => id;
-
-  renderItem = ({ item }) => {
+  renderItem = rowItem => {
     return (
       <Todo
-        key={item.id}
-        {...item}
-        isEditing={this.state.editingId === item.id}
+        key={rowItem.id}
+        {...rowItem}
+        isEditing={this.state.editingId === rowItem.id}
         onToggle={this.handleCheckBoxToggle}
         onEditToggle={this.handleToggleEditing}
         onUpdate={this.handleUpdateText}
@@ -141,15 +140,14 @@ class App extends Component {
     );
   };
 
-  renderSectionHeader = ({ section }) => {
-    const openedTodoNum = section.data.reduce((sum, cur) => {
-      if (!cur.isCompleted) sum += 1;
-      return sum;
-    }, 0);
+  renderSectionHeader = (section, sectionId) => {
+    const openedTodoNum = this.state.todos.filter(
+      todo => todo.listId === +sectionId && !todo.isCompleted
+    ).length;
 
     return (
       <View style={styles.sectionHeaderContainer}>
-        <Text style={styles.sectionHeader}>{section.title.toUpperCase()}</Text>
+        <Text style={styles.sectionHeader}>{section.toUpperCase()}</Text>
         {!!openedTodoNum && <Text style={styles.counter}>{openedTodoNum}</Text>}
       </View>
     );
@@ -160,11 +158,7 @@ class App extends Component {
 
     return lists.map(({ id, title }) => {
       const data = todos.filter(todo => todo.listId === id);
-      return {
-        title,
-        data,
-        key: title
-      };
+      return { title, data };
     });
   }
 
@@ -179,14 +173,15 @@ class App extends Component {
           onAddItem={this.handleAddItem}
           onChange={this.handleInputChange}
         />
-        <SectionList
+        <ExpandableList
           style={styles.list}
-          sections={sections}
-          keyExtractor={this.keyExtractor}
-          renderItem={this.renderItem}
-          renderSectionHeader={this.renderSectionHeader}
-          enableEmptySections
-          onScroll={this.handleScrollListView}
+          dataSource={sections}
+          headerKey="title"
+          memberKey="data"
+          renderRow={this.renderItem}
+          renderSectionHeaderX={this.renderSectionHeader}
+          openOptions={this.state.openLists}
+          data-test="todo-list"
         />
       </View>
     );

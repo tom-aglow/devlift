@@ -1,6 +1,6 @@
-import App from "../App";
-import Row from "../Todo";
-import { TestHelper, setupGlobalObject } from "../../utils/testUtils";
+import App from '../App';
+import { TestHelper, sel, setupGlobalObject } from '../../utils/testUtils';
+import stateMock from '../../utils/stateMock.json';
 
 const defaultProps = {};
 
@@ -10,20 +10,18 @@ beforeAll(() => {
   setupGlobalObject();
 });
 
-const items = [
-  { id: 1, text: "foo", isCompleted: false },
-  { id: 2, text: "bar", isCompleted: true }
-];
-
-it("renders correctly", () => {
+it('renders correctly', () => {
   const wrapper = helper.mountComponent({}, true);
   expect(wrapper).toMatchSnapshot();
 });
 
-it("renders correct amount of todos", () => {
+it('renders correct amount of todos', () => {
   const wrapper = helper.mountComponent({});
-  wrapper.setState({ items });
-  const todos = wrapper.find(Row);
+  wrapper.setState(stateMock);
+  const todos = wrapper.update().find(sel('todo-checkbox'));
 
-  expect(todos).toHaveLength(items.length);
+  expect(todos).toHaveLength(
+    stateMock.todos.filter(({ listId }) => stateMock.openLists.includes(listId))
+      .length
+  );
 });
